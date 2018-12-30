@@ -28,6 +28,7 @@ version = "2018.2"
 
 project {
     description = "abc 123"
+
     buildType(Build)
 }
 
@@ -35,12 +36,12 @@ object Build : BuildType({
     name = "Build"
     description = "test 123"
 
-    id("Build")
-
     params {
-        password("variable123",
-                "credentialsJSON:02f30920-79ea-415b-b784-41df8c1a220b",
-                display = ParameterDisplay.HIDDEN)
+        password("variable123", "credentialsJSON:02f30920-79ea-415b-b784-41df8c1a220b", display = ParameterDisplay.HIDDEN)
+    }
+
+    vcs {
+        root(DslContext.settingsRoot)
     }
 
     steps {
@@ -49,25 +50,19 @@ object Build : BuildType({
             scriptContent = """
                 #!/bin/bash
                 HASH=%build.vcs.number%
-                SHORT_HASH=${"$"}{HASH:0:7}
+                SHORT_HASH=${'$'}{HASH:0:7}
                 BUILD_COUNTER=%build.counter%
-                BUILD_NUMBER="1.0${"$"}BUILD_COUNTER.${"$"}SHORT_HASH"
-                echo "##teamcity[buildNumber '${"$"}BUILD_NUMBER']"
-                """.trimIndent()
+                BUILD_NUMBER="1.0${'$'}BUILD_COUNTER.${'$'}SHORT_HASH"
+                echo "##teamcity[buildNumber '${'$'}BUILD_NUMBER']"
+            """.trimIndent()
         }
-
         script {
             name = "build"
             scriptContent = """
                 mkdir bin
                 echo "built artifact" > bin/compiled.txt
-                """.trimIndent()
+            """.trimIndent()
         }
-    }
-
-
-    vcs {
-        root(DslContext.settingsRoot)
     }
 
     triggers {
