@@ -37,6 +37,12 @@ object Build : BuildType({
 
     id("Build")
 
+    params {
+        password("variable123",
+                "credentialsJSON:60e77b59-c430-41c7-aa8b-c6058495d0a4",
+                display = ParameterDisplay.HIDDEN)
+    }
+
     steps {
         script {
             name = "Set version using script"
